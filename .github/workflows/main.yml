@@ -1,4 +1,4 @@
-name: Build Android Project
+name: Build Android APK
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
       - name: Code checkout karein
         uses: actions/checkout@v4
 
-      - name: Java 17 (JDK) setup karein
+      - name: Java 17 setup karein
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -26,23 +26,17 @@ jobs:
         run: |
           yes | sdkmanager --licenses > /dev/null 2>&1 || true
 
-      - name: Gradle wrapper verify aur permission grant karein
-        run: |
-          if [ ! -f "gradlew" ]; then
-            echo "gradlew file nahi mili, naya wrapper generate kiya ja raha hai..."
-            gradle wrapper
-          fi
-          chmod +x gradlew
+      - name: Gradle permission grant karein
+        run: chmod +x gradlew
 
-      - name: Dependencies aur build assemble karein
-        run: ./gradlew assembleRelease --stacktrace
+      # Yahan sirf :app module ka APK banega (.aar bundle nahi hoga)
+      - name: Build APK only
+        run: ./gradlew :app:assembleDebug --stacktrace
 
-      - name: Build artifacts (.aar aur .apk) upload karein
+      - name: APK Artifact Upload karein
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-outputs
-          path: |
-            **/build/outputs/aar/*.aar
-            **/build/outputs/apk/**/*.apk
-          if-no-files-found: warn
+          name: TaoKDao-APK
+          path: app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
