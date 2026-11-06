@@ -1,0 +1,47 @@
+name: Build Android Project
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code checkout karein
+        uses: actions/checkout@v4
+
+      - name: Java 17 (JDK) setup karein
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Android SDK environment setup karein
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle wrapper verify aur permission grant karein
+        run: |
+          if [ ! -f "gradlew" ]; then
+            echo "gradlew file nahi mili, naya wrapper generate kiya ja raha hai..."
+            gradle wrapper
+          fi
+          chmod +x gradlew
+
+      - name: Dependencies aur build assemble karein
+        run: ./gradlew assembleRelease --stacktrace
+
+      - name: Build artifacts (.aar aur .apk) upload karein
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-outputs
+          path: |
+            **/build/outputs/aar/*.aar
+            **/build/outputs/apk/**/*.apk
+          if-no-files-found: warn
