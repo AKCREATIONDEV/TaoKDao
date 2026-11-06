@@ -22,8 +22,9 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Android SDK environment setup karein
-        uses: android-actions/setup-android@v3
+      - name: Android SDK Licenses accept karein
+        run: |
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
 
       - name: Gradle wrapper verify aur permission grant karein
         run: |
