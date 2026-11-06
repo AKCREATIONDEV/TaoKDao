@@ -1,14 +1,16 @@
-# Gradle files
+# Gradle build outputs ignore karein (lekin src ke andar ke build packages ko allow karein)
 build/
+!**/src/**/build/
+!**/src/**/build/**
+
 .gradle/
 .kotlin/
+
 # Intellij project files
 *.iml
 *.ipr
 *.iws
 .idea/
 
-/apks/debug/output.json
-/apks/release/output.json
 /apks/
 .claude/
