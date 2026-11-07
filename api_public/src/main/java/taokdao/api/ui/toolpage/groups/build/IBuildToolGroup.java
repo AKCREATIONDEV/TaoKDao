@@ -1,4 +1,7 @@
 package taokdao.api.ui.toolpage.groups.build;
 
-public interface IBuildToolGroup {
+import taokdao.api.ui.toolpage.internal.IBaseTreeToolGroup;
+
+public interface IBuildToolGroup extends IBaseTreeToolGroup {
+
 }
